@@ -1,0 +1,76 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+vector<int> getLevelCounts(int n, vector<int> parents) {
+    vector<vector<int>> children(n);
+    for (int i = 1; i < n; ++i) {
+        children[parents[i]].push_back(i);
+    }
+    vector<int> levelCounts(n);
+    queue<int> q{{0}};
+    int level = 0;
+    while (!q.empty()) {
+        int levelSize = q.size();
+        for (int i = 0; i < levelSize; ++i) {
+            int curr = q.front();
+            q.pop();
+            levelCounts[level] += 1;
+            for (int child : children[curr]) {
+                q.push(child);
+            }
+        }
+        level++;
+    }
+    return levelCounts;
+}
+
+int main() {
+    vector<int> parents{0, 0, 1, 1, 2, 2, 3, 3, 4, 4};
+    vector<int> levelCounts = getLevelCounts(10, parents);
+    for (int i = 0; i < levelCounts.size(); ++i) {
+        cout << "Level " << i << ": ";
+        for (int j = 0; j < levelCounts[i]; ++j) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+    cout << "Final output: ";
+    for (int i = 0; i < levelCounts.size(); ++i) {
+        for (int j = 0; j < levelCounts[i]; ++j) {
+            cout << i << " ";
+        }
+    }
+    cout << endl;
+    return 0;
+}
+
+
+output:
+Level 0: 0 
+Level 1: 1 
+Level 2: 2 2 
+Level 3: 3 3 3 3 
+Level 4: 4 4 
+Level 5: 
+Level 6: 
+Level 7: 
+Level 8: 
+Level 9: 
+Final output: 0 1 2 2 3 3 3 3 4 4 
+
+
+The code computes the number of nodes at each level of a tree given its parent indices. It does this by performing a BFS traversal of the tree starting from the root node (node 0), and counting the number of nodes at each level.
+
+Here's a breakdown of the getLevelCounts function:
+
+n is the total number of nodes in the tree, and parents is a vector of parent indices, where parents[i] is the parent of node i.
+We first create a vector of vectors called children, where children[i] is a vector containing the children of node i.
+We then create a vector called levelCounts to store the number of nodes at each level, initialized to all zeros.
+We use a queue to perform a BFS traversal of the tree starting from the root node (node 0).
+We initialize a variable called level to 0 to keep track of the current level.
+We loop while the queue is not empty.
+Inside the loop, we count the number of nodes at the current level by getting the size of the queue (which contains all the nodes at the current level).
+We loop through the nodes at the current level, popping them from the queue and incrementing the count of nodes at
